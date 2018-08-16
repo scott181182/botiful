@@ -1,0 +1,15 @@
+coverage/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+yarn.lock
+*.log
+.nyc_output
+lib
+lib_test
+
+private/
+
+.idea/
+.vscode/
