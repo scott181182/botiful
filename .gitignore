@@ -6,8 +6,7 @@ yarn-error.log*
 yarn.lock
 *.log
 .nyc_output
-lib
-lib_test
+src/
 
 private/
 
