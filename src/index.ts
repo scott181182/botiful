@@ -1,3 +1,5 @@
+import { resolve as resolve_path } from "path";
+
 import { Logger } from "winston";
 import { readFileSync, readdirSync } from "fs-extra";
 import { Client, Message, TextChannel } from "discord.js";
@@ -90,7 +92,7 @@ export class DiscordBot implements IDiscordBot
                 reply = "You are not authorized to use this command!";
             }
         }
-        if(reply.length > 0) { msg.channel.sendMessage(reply); }
+        if(reply.length > 0) { msg.channel.send(reply); }
     }
 
     public load_actions(actions: IAction[]): void;
@@ -99,8 +101,9 @@ export class DiscordBot implements IDiscordBot
     public load_actions(actions_param: { [name: string]: IAction } | IAction[] | IAction | string): void
     {
         if(typeof actions_param === "string") {
-            readdirSync(actions_param)
-                .map((action_file) => require(`${actions_param}/${action_file}`) as { [name: string]: IAction })
+            const action_path = resolve_path(actions_param);
+            readdirSync(action_path)
+                .map((action_file) => require(`${action_path}/${action_file}`) as { [name: string]: IAction })
                 .forEach((action_module) => this.load_actions(action_module));
         } else if(actions_param instanceof Array) {
             actions_param.forEach((action) => { this._actions[action.name] = action; })
@@ -115,8 +118,9 @@ export class DiscordBot implements IDiscordBot
     public load_middleware(middleware_param: IMiddleware | IMiddleware[] | string): void
     {
         if(typeof middleware_param === "string") {
-            const mws = readdirSync(middleware_param)
-                .map((middleware_file) => require(`${middleware_param}/${middleware_file}`) as { [name: string]: IMiddleware })
+            const middleware_path = resolve_path(middleware_param);
+            const mws = readdirSync(middleware_path)
+                .map((middleware_file) => require(`${middleware_path}/${middleware_file}`) as { [name: string]: IMiddleware })
                 .map((middleware_map) => Object.values(middleware_map))
                 .reduce((acc, curr) => acc.concat(curr), [  ] as IMiddleware[]);
             this.load_middleware(mws);
