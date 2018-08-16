@@ -103,6 +103,7 @@ export class DiscordBot implements IDiscordBot
         if(typeof actions_param === "string") {
             const action_path = resolve_path(actions_param);
             readdirSync(action_path)
+                .filter((action_file) => action_file.endsWith(".js"))
                 .map((action_file) => require(`${action_path}/${action_file}`) as { [name: string]: IAction })
                 .forEach((action_module) => this.load_actions(action_module));
         } else if(actions_param instanceof Array) {
@@ -120,6 +121,7 @@ export class DiscordBot implements IDiscordBot
         if(typeof middleware_param === "string") {
             const middleware_path = resolve_path(middleware_param);
             const mws = readdirSync(middleware_path)
+                .filter((middleware_file) => middleware_file.endsWith(".js"))
                 .map((middleware_file) => require(`${middleware_path}/${middleware_file}`) as { [name: string]: IMiddleware })
                 .map((middleware_map) => Object.values(middleware_map))
                 .reduce((acc, curr) => acc.concat(curr), [  ] as IMiddleware[]);
