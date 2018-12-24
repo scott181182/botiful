@@ -4,10 +4,11 @@ export interface IDiscordBot {
     readonly config: {
         [key: string]: any;
     };
-    readonly actions: IAction[];
     readonly log: Logger;
     readonly client: Client;
     readonly admin_role: string;
+    actions: () => IAction[];
+    get_action: (command: string) => IAction | null;
 }
 export declare type ActionMap = {
     [name: string]: IAction;

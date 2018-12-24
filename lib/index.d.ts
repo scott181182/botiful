@@ -10,13 +10,14 @@ export declare class DiscordBot implements IDiscordBot {
     readonly log: Logger;
     readonly client: Client;
     readonly admin_role: string;
-    readonly actions: IAction[];
     private _actions;
     private middleware;
     private readonly prefix;
     private readonly token;
     constructor(configuration: IDiscordBotConfig);
     constructor(configuration: string);
+    actions(): IAction[];
+    get_action(command: string): IAction;
     logout(): Promise<Logger>;
     start(): Promise<void>;
     run_action(msg: Message): Promise<void>;

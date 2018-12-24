@@ -26,7 +26,7 @@ export class DiscordBot implements IDiscordBot
     private readonly token: string;
 
     public constructor(configuration: IDiscordBotConfig);
-    public constructor(configuration: string)
+    public constructor(configuration: string);
     public constructor(configuration?: IDiscordBotConfig | string)
     {
         const config = {
@@ -155,7 +155,7 @@ export class DiscordBot implements IDiscordBot
                 .filter((mw) => mw.init)
                 .map((mw) => (mw.init as () => void | Promise<void>)())
         ).then(() => Promise.all(
-            this.actions
+            this.actions()
                 .filter((action) => action.init)
                 .map((action) => (action.init as () => void | Promise<void>)())
         )).then(() => { /* Gotta return Promise<void> */ });
