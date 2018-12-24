@@ -6,6 +6,6 @@ export const help: IAction =
     description: "Displays a list of all commands available to you",
     admin: false,
     run: (args, msg, bot) => {
-        return bot.actions.map((action) => `${action.name} : ${action.description}`).join('\n');
+        return bot.actions().map((action) => `${action.name} : ${action.description}`).join('\n');
     }
 };

@@ -5,7 +5,7 @@ import { readFileSync, readdirSync } from "fs-extra";
 import { Client, Message, TextChannel } from "discord.js";
 
 import { IDiscordBotConfig, default_config } from "./config";
-import { IAction, IMiddleware, IDiscordBot } from "./foundation";
+import { IAction, ActionMap, IMiddleware, IDiscordBot } from "./foundation";
 import { init_logger } from "./logger";
 import * as actions from "./actions";
 import * as middleware from "./middleware";
@@ -19,9 +19,8 @@ export class DiscordBot implements IDiscordBot
     public readonly log: Logger;
     public readonly client: Client;
     public readonly admin_role: string;
-    get actions(): IAction[] { return Object.values(this._actions); }
 
-    private _actions: { [name: string]: IAction } = {  };
+    private _actions: ActionMap = {  };
     private middleware: IMiddleware[] = [  ];
     private readonly prefix: string;
     private readonly token: string;
@@ -44,6 +43,8 @@ export class DiscordBot implements IDiscordBot
         this.admin_role = config.admin;
         this.client = new Client();
     }
+    public actions() { return Object.values(this._actions); }
+    public get_action(command: string) { return this._actions[command]; }
 
     public async logout()
     {
@@ -159,6 +160,7 @@ export class DiscordBot implements IDiscordBot
                 .map((action) => (action.init as () => void | Promise<void>)())
         )).then(() => { /* Gotta return Promise<void> */ });
     }
+
     private async is_authorized(action: IAction, message: Message): Promise<boolean>
     {
         for(const mw of this.middleware)
