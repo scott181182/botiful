@@ -14,10 +14,10 @@
     "scripts": {
         "clean": "rimraf lib && rimraf coverage",
         "format": "prettier --write \"{src,__tests__}/**/*.ts\" --single-quote --trailing-comma es5",
-        "lint": "tslint -p . --force --format verbose \"src/**/*.ts\"",
+        "lint": "tslint -t verbose \"src/**/*.ts\"",
         "prepublishOnly": "npm run build",
         "prebuild": "npm run clean && echo Using TypeScript && tsc --version",
-        "build": "tsc --pretty",
+        "build": "npm run lint && tsc --pretty",
         "watch": "npm run build -- --watch",
         "test": "jest",
         "start": "npm run build && node ."

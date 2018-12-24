@@ -1,7 +1,7 @@
 import { createLogger, format, Logger, LoggerOptions, transports } from "winston";
 import { ensureFileSync } from "fs-extra";
 
-// tslint:disable-next-line:no-var-requires
+// tslint:disable-next-line:no-var-requires no-implicit-dependencies
 const MESSAGE = require("triple-beam").MESSAGE;
 
 import { IDiscordBotConfigComplete } from "./config";
