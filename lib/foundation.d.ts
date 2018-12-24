@@ -24,6 +24,7 @@ export interface IAction {
     state?: any;
     readonly init?: (bot: IDiscordBot) => void | Promise<void>;
     readonly run: ActionRun;
+    readonly cleanup?: () => void | Promise<void>;
 }
 export declare function subcommand(subcmds: {
     [name: string]: ActionRun;
