@@ -49,7 +49,12 @@ export class DiscordBot implements IDiscordBot
     public async logout()
     {
         this.log.debug("Bot shutting down...");
-        return this.client.destroy().then(() => this.log.info("Bot logged out!"));
+        return Promise.all(this.actions()
+                .filter(action => action.cleanup)
+                .map(action => (action.cleanup as () => void | Promise<void>)())
+            )
+            .then(() => this.client.destroy())
+            .then(() => this.log.info("Bot logged out!"));
     }
 
 
