@@ -26,6 +26,7 @@ export interface IAction {
     readonly run: ActionRun;
     readonly cleanup?: (bot: IDiscordBot) => void | Promise<void>;
 }
+export declare function verifyAction(maybe_action: any): boolean;
 export declare function subcommand(subcmds: {
     [name: string]: ActionRun;
 }): ActionRun;
@@ -33,3 +34,4 @@ export interface IMiddleware {
     readonly init?: (bot: IDiscordBot) => void | Promise<void>;
     readonly apply: (action: IAction, message: Message, bot: IDiscordBot) => boolean | Promise<boolean>;
 }
+export declare function verifyMiddleware(maybe_middleware: any): boolean;

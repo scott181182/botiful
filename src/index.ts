@@ -5,7 +5,7 @@ import { readFileSync, readdirSync } from "fs-extra";
 import { Client, Message, TextChannel } from "discord.js";
 
 import { IDiscordBotConfig, default_config } from "./config";
-import { IAction, ActionMap, IMiddleware, IDiscordBot } from "./foundation";
+import { IAction, ActionMap, IMiddleware, IDiscordBot, verifyAction, verifyMiddleware } from "./foundation";
 import { init_logger } from "./logger";
 import * as actions from "./actions";
 import * as middleware from "./middleware";
@@ -110,7 +110,10 @@ export class DiscordBot implements IDiscordBot
             const action_path = resolve_path(actions_param);
             readdirSync(action_path)
                 .filter((action_file) => action_file.endsWith(".js"))
-                .map((action_file) => require(`${action_path}/${action_file}`) as { [name: string]: IAction })
+                .map((action_file) => {
+                    const mod = require(`${action_path}/${action_file}`) as { [name: string]: IAction };
+                    return Object.values(mod).filter((maybe_action_module) => verifyAction(maybe_action_module));
+                })
                 .forEach((action_module) => this.load_actions(action_module));
         } else if(actions_param instanceof Array) {
             actions_param.forEach((action) => { this._actions[action.name] = action; })
@@ -130,7 +133,8 @@ export class DiscordBot implements IDiscordBot
                 .filter((middleware_file) => middleware_file.endsWith(".js"))
                 .map((middleware_file) => require(`${middleware_path}/${middleware_file}`) as { [name: string]: IMiddleware })
                 .map((middleware_map) => Object.values(middleware_map))
-                .reduce((acc, curr) => acc.concat(curr), [  ] as IMiddleware[]);
+                .reduce((acc, curr) => acc.concat(curr), [  ] as IMiddleware[])
+                .filter((maybe_middleware) => verifyMiddleware(maybe_middleware));
             this.load_middleware(mws);
         } else if(middleware_param instanceof Array) {
             this.middleware.concat(middleware_param);
