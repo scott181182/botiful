@@ -13,7 +13,6 @@
     "typings": "lib/index.d.ts",
     "scripts": {
         "clean": "rimraf lib && rimraf coverage",
-        "format": "prettier --write \"{src,__tests__}/**/*.ts\" --single-quote --trailing-comma es5",
         "lint": "tslint -t verbose \"src/**/*.ts\"",
         "prepublishOnly": "npm run build",
         "prebuild": "npm run clean && echo Using TypeScript && tsc --version",
@@ -23,27 +22,27 @@
         "start": "npm run build && node ."
     },
     "dependencies": {
-        "bufferutil": "^4.0.1",
-        "discord.js": "^11.4.2",
-        "fs-extra": "^7.0.1",
-        "libsodium-wrappers": "^0.7.3",
-        "node-opus": "^0.3.1",
-        "winston": "^3.1.0"
+        "fs-extra": "^8.1.0",
+        "winston": "^3.2.1"
+    },
+    "peerDependencies": {
+        "discord.js": "^11.5"
     },
     "devDependencies": {
-        "@types/fs-extra": "^5.0.3",
-        "@types/jest": "^23.1.2",
+        "@types/fs-extra": "^8.0.0",
+        "@types/jest": "^24.0.18",
         "@types/logform": "^1.2.0",
-        "@types/node": "^10.3.6",
-        "coveralls": "^2.0.0",
-        "jest": "^23.2.0",
-        "prettier": "^1.5.2",
-        "rimraf": "^2.0.0",
-        "ts-jest": "^22.4.6",
-        "ts-node": "^7.0.0",
-        "tslint": "^5.10.0",
-        "tslint-config-prettier": "^1.13.0",
-        "typescript": "^2.9.2"
+        "@types/node": "^12.7.5",
+        "@types/ws": "^6.0.3",
+        "coveralls": "^3.0.6",
+        "jest": "^24.9.0",
+        "prettier": "^1.18.2",
+        "rimraf": "^3.0.0",
+        "ts-jest": "^24.1.0",
+        "ts-node": "^8.3.0",
+        "tslint": "^5.20.0",
+        "tslint-config-prettier": "^1.18.0",
+        "typescript": "^3.6.3"
     },
     "engines": {
         "node": ">=6.0.0"
