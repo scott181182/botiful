@@ -1,14 +1,19 @@
 import { IMiddleware } from "./foundation";
 
+
+
 export const admin: IMiddleware =
 {
-    apply: (action, message, bot) => !action.admin || message.member.roles.some((role) => role.name === bot.admin_role)
+    apply: (action, message, bot) => {
+        if(!action.admin) { return true; }
+        return !!message.member && message.member.roles.cache.some((role) => role.name === bot.adminRole);
+    }
 };
 export const roles: IMiddleware =
 {
     apply: (action, message) => {
         if(!action.roles || action.roles.length === 0) { return true; }
-        return message.member.roles.some((member_role) =>
+        return !!message.member && message.member.roles.cache.some((member_role) =>
             (action.roles as string[]).some((action_role) =>
                 action_role === member_role.name));
     }
