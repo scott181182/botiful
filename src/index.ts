@@ -112,7 +112,7 @@ export class DiscordBot implements IDiscordBot
     public loadMiddleware(middleware_param: IMiddleware | IMiddleware[]): void
     {
         if(middleware_param instanceof Array) {
-            this.middleware.concat(middleware_param);
+            this.middleware = this.middleware.concat(middleware_param);
         } else {
             this.middleware.push(middleware_param);
         }
