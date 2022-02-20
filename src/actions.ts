@@ -2,17 +2,17 @@ import { IAction } from "./foundation";
 
 
 
-export const help: IAction =
+export const helpCommand: IAction =
 {
     name: "help",
     description: "Displays a list of all commands available to you",
     admin: false,
     run: (_args, _msg, bot) => {
-        return bot.actions().map((action) => `${action.name} : ${action.description}`).join('\n');
+        return bot.getActions().map((action) => `${action.name} : ${action.description}`).join('\n');
     }
 };
 
-export const man: IAction =
+export const manCommand: IAction =
 {
     name: "man",
     description: "Displays the manual entry for a specified command",

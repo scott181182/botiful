@@ -1,11 +1,12 @@
 import { Logger } from "winston";
-import { Client, Message, Intents, PartialMessage } from "discord.js";
+import { Client, Message, PartialMessage } from "discord.js";
 
 import { IDiscordBotConfig, getCompleteConfig } from "./config";
 import { IAction, ActionMap, IMiddleware, IDiscordBot, SemiPartialMessage } from "./foundation";
 import { initLogger } from "./logger";
-import * as actions from "./actions";
-import * as middleware from "./middleware";
+
+import { helpCommand, manCommand } from "./actions";
+import { adminMiddleware, rolesMiddleware, usersMiddleware } from "./middleware";
 
 export * from "./foundation";
 
@@ -33,16 +34,16 @@ export class DiscordBot implements IDiscordBot
         this.token = config.token;
         this.adminRole = config.admin;
         this.client = new Client({
-            intents: config.intents || [ Intents.FLAGS.GUILDS ]
+            intents: config.intents
         });
     }
-    public actions() { return Object.values(this._actions); }
     public getAction(command: string) { return this._actions[command]; }
+    public getActions() { return Object.values(this._actions); }
 
     public async logout()
     {
         this.log.debug("Bot shutting down...");
-        return Promise.all(this.actions()
+        return Promise.all(this.getActions()
                 .filter(action => action.cleanup)
                 .map(action => (action.cleanup as () => void | Promise<void>)())
             )
@@ -81,7 +82,7 @@ export class DiscordBot implements IDiscordBot
         const cmd_action = this._actions[cmd];
         if(cmd_action)
         {
-            const authorized = await this.is_authorized(cmd_action, msg as SemiPartialMessage);
+            const authorized = await this.isAuthorized(cmd_action, msg as SemiPartialMessage);
             if(authorized)
             {
                 const str = await cmd_action.run(cmd_args, msg as SemiPartialMessage, this);
@@ -119,14 +120,14 @@ export class DiscordBot implements IDiscordBot
 
 
 
-    private async init(): Promise<void>
+    private init(): Promise<void>
     {
         this.log.info("Initializing Discord Bot...");
-        this.loadActions(actions as { [name: string]: IAction });
-        this.loadMiddleware([ middleware.admin, middleware.roles, middleware.users ]);
+        this.loadActions([ helpCommand, manCommand ]);
+        this.loadMiddleware([ adminMiddleware, rolesMiddleware, usersMiddleware ]);
 
-        this.client.on("message", async (msg) => this.runAction(msg));
-        this.client.on('messageUpdate', async (oldmsg, newmsg) => {
+        this.client.on("messageCreate", (msg) => this.runAction(msg));
+        this.client.on("messageUpdate", (oldmsg, newmsg) => {
             if((oldmsg.content === newmsg.content)
                 || (newmsg.embeds && !oldmsg.embeds)
                 || (newmsg.embeds.length > 0 && oldmsg.embeds.length === 0)) { return; }
@@ -138,13 +139,13 @@ export class DiscordBot implements IDiscordBot
                 .filter((mw) => mw.init)
                 .map((mw) => (mw.init as () => void | Promise<void>)())
         ).then(() => Promise.all(
-            this.actions()
+            this.getActions()
                 .filter((action) => action.init)
                 .map((action) => (action.init as () => void | Promise<void>)())
         )).then(() => { /* Gotta return Promise<void> */ });
     }
 
-    private async is_authorized(action: IAction, message: SemiPartialMessage): Promise<boolean>
+    private async isAuthorized(action: IAction, message: SemiPartialMessage): Promise<boolean>
     {
         for(const mw of this.middleware)
         {

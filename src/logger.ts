@@ -3,6 +3,8 @@ import { ensureFileSync } from "fs-extra";
 
 import { IDiscordBotConfigComplete } from "./config";
 
+const { MESSAGE } = require("triple-beam");
+
 
 
 function formatNow(): string {
@@ -15,7 +17,7 @@ export const botFormat = format((info) => {
     const message = typeof info.message === "string"
         ? info.message
         : '\n' + JSON.stringify(info.message, null, 4);
-    info.message = `${formatNow()} [${info.level}]: ${message}`;
+    info[MESSAGE] = `${formatNow()} [${info.level}]: ${message}`;
     return info;
 });
 

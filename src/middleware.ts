@@ -2,14 +2,14 @@ import { IMiddleware } from "./foundation";
 
 
 
-export const admin: IMiddleware =
+export const adminMiddleware: IMiddleware =
 {
     apply: (action, message, bot) => {
         if(!action.admin) { return true; }
         return !!message.member && message.member.roles.cache.some((role) => role.name === bot.adminRole);
     }
 };
-export const roles: IMiddleware =
+export const rolesMiddleware: IMiddleware =
 {
     apply: (action, message) => {
         if(!action.roles || action.roles.length === 0) { return true; }
@@ -18,7 +18,7 @@ export const roles: IMiddleware =
                 action_role === member_role.name));
     }
 };
-export const users: IMiddleware =
+export const usersMiddleware: IMiddleware =
 {
     apply: (action, message) => {
         if(!action.users || action.users.length === 0) { return true; }

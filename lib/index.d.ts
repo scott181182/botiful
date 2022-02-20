@@ -15,8 +15,8 @@ export declare class DiscordBot implements IDiscordBot {
     private readonly prefix;
     private readonly token;
     constructor(options: IDiscordBotConfig);
-    actions(): IAction[];
     getAction(command: string): IAction;
+    getActions(): IAction[];
     logout(): Promise<Logger>;
     start(): Promise<void>;
     runAction(msg: Message | PartialMessage): Promise<void>;
@@ -27,5 +27,5 @@ export declare class DiscordBot implements IDiscordBot {
     loadMiddleware(middleware: IMiddleware): void;
     loadMiddleware(middleware: IMiddleware[]): void;
     private init;
-    private is_authorized;
+    private isAuthorized;
 }

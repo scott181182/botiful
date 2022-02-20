@@ -8,7 +8,7 @@ export interface IDiscordBot
     readonly client: Client;
     readonly adminRole: string;
 
-    actions: () => IAction[];
+    getActions: () => IAction[];
     getAction: (command: string) => IAction | null;
 }
 

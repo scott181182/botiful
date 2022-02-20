@@ -7,7 +7,7 @@ export interface IDiscordBot {
     readonly log: Logger;
     readonly client: Client;
     readonly adminRole: string;
-    actions: () => IAction[];
+    getActions: () => IAction[];
     getAction: (command: string) => IAction | null;
 }
 export declare type SemiPartialMessage = PartialMessage & Pick<Message, "content" | "author">;
