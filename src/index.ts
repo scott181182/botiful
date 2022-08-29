@@ -2,7 +2,7 @@ import { resolve as resolve_path } from "path";
 
 import { Logger } from "winston";
 import { readFileSync, readdirSync } from "fs-extra";
-import { Client, Message, TextChannel } from "discord.js";
+import { Client, Message } from "discord.js";
 
 import { IDiscordBotConfig, default_config } from "./config";
 import { IAction, ActionMap, IMiddleware, IDiscordBot, verifyAction, verifyMiddleware } from "./foundation";
@@ -19,10 +19,10 @@ export class DiscordBot implements IDiscordBot
     public readonly log: Logger;
     public readonly client: Client;
     public readonly admin_role: string;
+    public readonly prefix: string;
 
     private _actions: ActionMap = {  };
     private middleware: IMiddleware[] = [  ];
-    private readonly prefix: string;
     private readonly token: string;
 
     public constructor(configuration: IDiscordBotConfig);
